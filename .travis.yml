@@ -3,3 +3,5 @@ php:
   - '7.0'
   - nightly
 script: phpunit test/test.php
+after_success:
+  - coveralls
