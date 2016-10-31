@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Nacho\\":"src/"
+    }
+  },
+  "require": {
+    "phpunit/phpunit": "^5.6"
+  }
+}

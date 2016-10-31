@@ -1,0 +1,7 @@
+ETAPAS D'AGOSTINO
+
+1 - Repositorio
+2 - Test
+3 - TravisCI
+4 - 75% Coverage (coveralls.io)
+5 - Modificaciónes -> Commit -> Testing
