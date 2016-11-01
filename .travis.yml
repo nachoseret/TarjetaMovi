@@ -2,6 +2,9 @@ language: php
 php:
   - '7.0'
   - nightly
-script: phpunit test/test.php
+before_install:
+  - composer require satooshi/php-coveralls
+script:
+  - phpunit -c phpunit.xml.dist
 after_success:
-  - coveralls
+  - php vendor/bin/coveralls -v
