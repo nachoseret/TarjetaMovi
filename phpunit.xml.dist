@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit>
-	<testsuites>
-		<testsuite name="TarjetaMovi">
-			<file>./test/test.php</file>
-		</testsuite>
-	</testsuites>
-	<logging>
-		<log type="coverage-clover" target="build/logs/clover.xml"/>
-	</logging>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false">
+    <testsuites>
+        <testsuite name="TarjetaMovi">
+            <directory suffix="Test.php">./test/</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+
+    <filter>
+        <whitelist>
+            <directory>src</directory>
+        </whitelist>
+    </filter>
+
 </phpunit>
