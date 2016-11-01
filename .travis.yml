@@ -2,9 +2,10 @@ language: php
 php:
   - '7.0'
   - nightly
-before_install:
-  - composer require satooshi/php-coveralls
+install:
+  - composer update --prefer-source
 script:
-  - phpunit -c phpunit.xml.dist
-after_success:
+  - mkdir -p build/logs
+  - php vendor/bin/phpunit --coverage-clover=build/logs/clover.xml tests
+after_script:
   - php vendor/bin/coveralls -v
