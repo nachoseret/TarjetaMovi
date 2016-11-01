@@ -2,8 +2,6 @@ language: php
 php:
   - '7.0'
   - nightly
-install:
-  - composer update --prefer-source
 script:
   - mkdir -p build/logs
   - php vendor/bin/phpunit --coverage-clover=build/logs/clover.xml tests
