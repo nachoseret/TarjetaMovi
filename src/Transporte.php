@@ -3,11 +3,7 @@
 namespace Nacho;
 
 class Transporte {
-	protected $tipo;
-
-	public function setTipo($t){
-		$this->tipo = $t;
-	}
+	public $tipo;
 
 	public function tipo() {
 		return $this->tipo;

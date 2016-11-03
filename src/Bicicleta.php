@@ -3,7 +3,7 @@
 namespace Nacho;
 
 class Bicicleta extends Transporte {
-	protected $patente;
+	public $patente;
 
 	public function __construct($patente) {
 		$this->tipo = "Bicicleta";

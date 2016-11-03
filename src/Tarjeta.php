@@ -3,9 +3,9 @@
 namespace Nacho;
 
 class Tarjeta implements InterfaceTarjeta {
-	protected $viajes = [];
-	protected $saldo = 0;
-	protected $descuento;
+	public $viajes = [];
+	public $saldo = 0;
+	public $descuento;
 
 	public function __construct() {
 		$this->descuento = 1;
@@ -41,7 +41,7 @@ class Tarjeta implements InterfaceTarjeta {
 		if ($monto == 290) {
 			$this->saldo += 340;
 		}
-		else if ($monto = 544) {
+		else if ($monto == 544) {
 			$this->saldo += 680;
 		}
 		else {
@@ -58,23 +58,3 @@ class Tarjeta implements InterfaceTarjeta {
 	}
 }
 
-$tarjeta = new Tarjeta;
-$tarjeta->recargar(290);
-echo $tarjeta->saldo() . "<br>";
-
-$colectivo144Negro = new Colectivo("144 Negro", "Rosario Bus");
-$tarjeta->pagar($colectivo144Negro, "2016/06/30 22:50");
-echo $tarjeta->saldo() . "<br>";
-
-$colectivo135 = new Colectivo("135", "Rosario Bus");
-$tarjeta->pagar($colectivo135, "2016/06/30 23:10");
-echo $tarjeta->saldo() . "<br>";
-
-$bici = new Bicicleta(1234);
-$tarjeta->pagar($bici, "2016/07/02 08:10");
-
-foreach ($tarjeta->viajesRealizados() as $viaje) {
-	echo $viaje->tipo() . "<br>";
-	echo $viaje->monto() . "<br>";
-	echo $viaje->transporte()->nombre() . "<br>";
-}

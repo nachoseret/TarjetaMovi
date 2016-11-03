@@ -3,10 +3,10 @@
 namespace Nacho;
 
 class Viaje {
-	protected $tipo;
-	protected $monto;
-	protected $transporte;
-	protected $tiempo;
+	public $tipo;
+	public $monto;
+	public $transporte;
+	public $tiempo;
 
 	public function __construct($tipo, $monto, $transporte, $tiempo) {
 		$this->tipo = $tipo;
