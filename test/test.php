@@ -23,6 +23,7 @@ class TransporteTest extends TestCase {
 		$this->transporte = new Transporte();
 		$this->viaje = new Viaje("Colectivo", 8.50, "144 Negro", "27/09/16 14:44");
 		$this->colectivo = new Colectivo("144 Negro", "Rosario Bus");
+		$this->trolebus = new Colectivo("K", "Semtur");
 		$this->bicicleta = new Bicicleta(1234);
 		$this->tarjeta = new Tarjeta(0001);
 		$this->medioBoleto = new MedioBoleto();
@@ -69,47 +70,109 @@ class TransporteTest extends TestCase {
 		$patente = $this->bicicleta->nombre();
 		$this->assertEquals($patente, 1234);
 	}
-	
+
 	public function testTarjeta() {
-		
-		$this->tarjeta->saldo = 100;
-		$saldo_aux = $this->tarjeta->saldo();
-		$this->assertEquals($saldo_aux, $this->tarjeta->saldo);
-		
-		$this->tarjeta->saldo = 0;
+		$aux_saldo = 0;
 		$this->tarjeta->recargar(290);
-		$this->assertEquals($this->tarjeta->saldo, 340);	
-		
-		$saldo_inicial = $this->tarjeta->saldo();
-		$this->tarjeta->pagar($this->colectivo, "2016/06/30 22:50");
-		$saldo_final = $saldo_inicial - 8.50;
-		$this->assertEquals($saldo_final, $this->tarjeta->saldo);
-		
-		$trasbordo = new Colectivo("135", "Rosario Bus");
-		$saldo_inicial = $this->tarjeta->saldo();
-		$this->tarjeta->pagar($trasbordo, "2016/06/30 23:10");
-		$saldo_final = $saldo_inicial - 2.81;
-		$this->assertEquals(round($saldo_final), round($this->tarjeta->saldo));
-		
-		$this->medioBoleto->recargar(290);
-		$saldo_inicial = $this->medioBoleto->saldo();
-		$this->medioBoleto->pagar($this->colectivo, "2016/06/30 23:10");
-		$saldo_final = $saldo_inicial - 4.25;
-		$this->assertEquals($saldo_final, $this->medioBoleto->saldo);
-		
-		$saldo_inicial = $this->paseLibre->saldo();
-		$this->paseLibre->pagar($this->colectivo, "2016/06/30 23:10");
-		$saldo_final = $saldo_inicial;
-		$this->assertEquals($saldo_final, $this->paseLibre->saldo);
-	
-		$saldo_inicial = $this->tarjeta->saldo();
-		$this->tarjeta->pagar($this->bicicleta, "2016/06/30 23:10");
-		$saldo_final = $saldo_inicial - 12;
-		$this->assertEquals($saldo_final, $this->tarjeta->saldo);
-		
-		$this->tarjeta->viajes = 3;
-		$viajes = $this->tarjeta->viajesRealizados();
-		$this->assertEquals($viajes, $this->tarjeta->viajes);
+		$this->assertEquals($this->tarjeta->saldo(),$aux_saldo + 340);
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->recargar(544);
+		$this->assertEquals($this->tarjeta->saldo(),$aux_saldo + 680);
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->recargar(30);
+		$this->assertEquals($this->tarjeta->saldo(),$aux_saldo + 30);
+
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 13:30:00");
+		foreach ($this->tarjeta->viajesRealizados() as $viaje) {
+			$this->assertEquals($viaje->tipo(), "Colectivo");
+			$this->assertEquals($viaje->monto(), 8.5);
+			$this->assertEquals($viaje->transporte()->nombre(), "144 Negro");
+			$this->assertEquals($viaje->tiempo(), strtotime("2016-10-10 13:30:00"));
+		}
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 13:30:00");
+		$this->assertEquals($this->tarjeta->saldo(),0);
+		$this->assertEquals($this->tarjeta->plus(),1);
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->recargar(20);
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 13:30:00");
+		$this->tarjeta->pagar($this->trolebus, "2016-10-10 13:50:00");
+		$this->assertEquals($this->tarjeta->saldo(), 8.86);
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 13:30:00");
+		$this->tarjeta->recargar(20);
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 18:30:00");
+		$this->assertEquals($this->tarjeta->saldo(),3);
+		$this->assertEquals($this->tarjeta->plus(),0);
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->pagar($this->colectivo, "2016-10-10 13:30:00");
+		$this->tarjeta->pagar($this->colectivo, "2016-10-11 13:30:00");
+		$this->tarjeta->pagar($this->colectivo, "2016-10-12 13:30:00");
+		$this->expectOutputString("Error");
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->recargar(50);
+		$this->tarjeta->pagar($this->bicicleta, "2016-10-10 13:30:00");
+		$this->tarjeta->pagar($this->bicicleta, "2016-10-11 13:30:00");
+		$this->assertEquals($this->tarjeta->saldo(),26);
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->recargar(50);
+		$this->tarjeta->pagar($this->bicicleta, "2016-10-10 13:30:00");
+		$this->tarjeta->pagar($this->bicicleta, "2016-10-10 18:30:00");
+		$this->assertEquals($this->tarjeta->saldo(),38);
+
+		$this->tarjeta->saldo = 0;
+		$this->tarjeta->plus = 0;
+		$this->tarjeta->viajes = array();
+		$this->tarjeta->boletos = array();
+		$this->tarjeta->ulti_bici = NULL;
+		$aux_saldo = $this->tarjeta->saldo();
+
+		$this->tarjeta->pagar($this->bicicleta, "2016-10-10 13:30:00");
+		$this->expectOutputString("ErrorError");
 	}
 }
 
