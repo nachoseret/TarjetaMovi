@@ -10,6 +10,7 @@ use Nacho\PaseLibre;
 use Nacho\Tarjeta;
 use Nacho\Transporte;
 use Nacho\Viaje;
+use Nacho\Boleto;
 use PHPUnit\Framework\TestCase;
 
 class TransporteTest extends TestCase {
@@ -23,7 +24,7 @@ class TransporteTest extends TestCase {
 		$this->viaje = new Viaje("Colectivo", 8.50, "144 Negro", "27/09/16 14:44");
 		$this->colectivo = new Colectivo("144 Negro", "Rosario Bus");
 		$this->bicicleta = new Bicicleta(1234);
-		$this->tarjeta = new Tarjeta();
+		$this->tarjeta = new Tarjeta(0001);
 		$this->medioBoleto = new MedioBoleto();
 		$this->paseLibre = new PaseLibre();
 	}
@@ -78,7 +79,7 @@ class TransporteTest extends TestCase {
 		$saldo_inicial = $this->tarjeta->saldo();
 		$this->tarjeta->pagar($trasbordo, "2016/06/30 23:10");
 		$saldo_final = $saldo_inicial - 2.81;
-		$this->assertEquals($saldo_final, $this->tarjeta->saldo);
+		$this->assertEquals(round($saldo_final), round($this->tarjeta->saldo));
 		
 		$this->medioBoleto->recargar(290);
 		$saldo_inicial = $this->medioBoleto->saldo();
