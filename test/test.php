@@ -27,7 +27,17 @@ class TransporteTest extends TestCase {
 		$this->tarjeta = new Tarjeta(0001);
 		$this->medioBoleto = new MedioBoleto();
 		$this->paseLibre = new PaseLibre();
+		$this->boleto = new Boleto("0001", "2016-09-30 03:30:00", $this->colectivo, 20, 8.5, "Normal");
 	}
+
+	public function testBoleto() {
+		$this->assertEquals($this->boleto->id(), "0001");
+		$this->assertEquals($this->boleto->fecha(), "2016-09-30 03:30:00");
+		$this->assertEquals($this->boleto->transporte(), "144 Negro");
+		$this->assertEquals($this->boleto->saldo(), 20);
+		$this->assertEquals($this->boleto->monto(), 8.5);
+		$this->assertEquals($this->boleto->tipo(), "Normal");
+	} 
 
 	public function testTransporte() {
 		$this->transporte->tipo = "Colectivo";
